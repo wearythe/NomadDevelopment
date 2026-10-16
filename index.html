@@ -1,283 +1,314 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#151416">
-  <meta name="description" content="Nomad Development builds gameplay systems, interfaces, and reliable Roblox experiences with Luau.">
-  <title>Nomad Development — Roblox Systems & Gameplay</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#141214">
+  <meta name="description" content="Nomad Development — Roblox game development, gameplay systems, aircraft physics, sports mechanics, and game balancing.">
+  <title>Nomad Development | Roblox Game Development</title>
   <style>
     :root {
-      --bg: #111012;
-      --surface: #191719;
-      --surface-2: #201c20;
-      --line: #332b31;
-      --text: #f4eef1;
-      --muted: #b3a7ae;
-      --accent: #8e2448;
-      --accent-bright: #c0446d;
-      --accent-soft: #321521;
-      --max: 1120px;
-      --radius: 18px;
+      --bg: #141214;
+      --panel: #1e1a1e;
+      --line: #382b34;
+      --text: #f5eff2;
+      --muted: #b9adb5;
+      --red: #a12e54;
+      --pink: #e17a9e;
     }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      background:
-        radial-gradient(ellipse at 82% 0%, rgba(142,36,72,.17), transparent 35rem),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
     }
     a { color: inherit; text-decoration: none; }
-    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 4px; }
-    .wrap { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
-    .nav {
-      display: flex; align-items: center; justify-content: space-between; gap: 20px;
-      padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.07);
+    a:focus-visible { outline: 2px solid var(--pink); outline-offset: 4px; }
+    .wrap { width: min(1100px, 90%); margin: auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
     }
-    .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -.04em; }
-    .brand-mark {
-      width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px;
-      background: linear-gradient(145deg, #a32d55, #54172f); color: white; font-size: 14px;
-      box-shadow: 0 8px 24px rgba(142,36,72,.22);
+    .logo { font-weight: 850; letter-spacing: -.04em; }
+    .logo span { color: var(--pink); }
+    nav { display: flex; gap: 24px; color: var(--muted); font-size: 13px; }
+    nav a:hover, .text-link:hover { color: white; }
+    .hero { padding: 100px 0 80px; }
+    .eyebrow {
+      color: var(--pink);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-weight: 800;
     }
-    .brand-name { font-size: 15px; }
-    .nav-links { display: flex; align-items: center; gap: 26px; color: var(--muted); font-size: 13px; }
-    .nav-links a:hover, .text-link:hover { color: white; }
-    .button {
-      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-      border: 1px solid var(--line); border-radius: 999px; padding: 12px 18px;
-      font-weight: 700; font-size: 13px; transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    h1 {
+      max-width: 850px;
+      margin: 18px 0;
+      font-size: clamp(43px, 7vw, 78px);
+      line-height: 1.04;
+      letter-spacing: -.065em;
     }
-    .button:hover { transform: translateY(-2px); }
-    .button-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .button-primary:hover { background: #a32d55; border-color: #a32d55; }
-    .button-secondary { background: rgba(255,255,255,.025); }
-    .button-secondary:hover { background: var(--surface-2); border-color: #58404b; }
-    .hero { padding: 96px 0 80px; display: grid; grid-template-columns: 1.25fr .75fr; gap: 56px; align-items: center; }
-    .eyebrow { display: inline-flex; gap: 9px; align-items: center; color: #e5a8bd; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
-    .eyebrow:before { content: ""; width: 22px; height: 1px; background: var(--accent-bright); }
-    h1 { margin: 20px 0; max-width: 760px; font-size: clamp(44px, 7vw, 76px); line-height: 1.02; letter-spacing: -.065em; }
-    .gradient { color: #d45b82; }
-    .hero-copy { max-width: 590px; color: var(--muted); font-size: 17px; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-    .microcopy { color: #887b83; font-size: 12px; margin-top: 17px; }
-    .hero-panel {
-      padding: 25px; border: 1px solid var(--line); border-radius: 24px;
-      background: linear-gradient(155deg, rgba(44,31,39,.92), rgba(23,20,23,.92));
-      box-shadow: 0 25px 80px rgba(0,0,0,.18);
+    h1 span { color: var(--pink); }
+    .intro { max-width: 650px; color: var(--muted); font-size: 17px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn {
+      display: inline-block;
+      padding: 12px 19px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-weight: 750;
+      font-size: 13px;
+      transition: .2s;
     }
-    .panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
-    .panel-label { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-    .status { display: inline-flex; align-items: center; gap: 7px; color: #c3d9c7; font-size: 11px; }
-    .status:before { content: ""; width: 6px; height: 6px; background: #7cb68b; border-radius: 50%; }
-    .code-window { margin-top: 20px; padding: 18px; border-radius: 14px; background: #100e10; border: 1px solid #30252b; font: 12px/2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #b6a7b0; overflow: hidden; }
-    .code-window .pink { color: #df7298; }
-    .code-window .lav { color: #c0a2e8; }
-    .code-window .green { color: #9cc7a3; }
-    .code-window .indent { padding-left: 18px; }
-    .panel-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
-    .mini-stat { padding: 14px; background: rgba(255,255,255,.025); border: 1px solid var(--line); border-radius: 12px; }
-    .mini-stat strong { display: block; font-size: 13px; }
-    .mini-stat span { color: var(--muted); font-size: 11px; }
-    section { padding: 74px 0; }
-    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 30px; }
-    .section-kicker { color: #d45b82; text-transform: uppercase; letter-spacing: .15em; font-size: 11px; font-weight: 800; }
-    h2 { margin: 8px 0 0; font-size: clamp(30px, 4vw, 44px); line-height: 1.12; letter-spacing: -.045em; }
-    .section-intro { max-width: 450px; margin: 0; color: var(--muted); font-size: 14px; }
-    .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
-    .project {
-      padding: 25px; border-radius: var(--radius); border: 1px solid var(--line);
-      background: linear-gradient(160deg, rgba(31,27,31,.96), rgba(23,20,23,.96));
-      min-height: 250px; transition: border-color .2s ease, transform .2s ease;
+    .btn:hover { transform: translateY(-2px); }
+    .primary { background: var(--red); border-color: var(--red); }
+    .primary:hover { background: #b53a65; }
+    .secondary { background: var(--panel); }
+    section { padding: 65px 0; }
+    .section-head { margin-bottom: 28px; }
+    h2 { margin: 8px 0; font-size: clamp(30px, 4vw, 43px); line-height: 1.15; letter-spacing: -.045em; }
+    .section-desc { max-width: 680px; color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+    .card {
+      background: linear-gradient(145deg, #211c21, #191619);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      padding: 25px;
+      transition: border-color .2s, transform .2s;
     }
-    .project:hover { transform: translateY(-3px); border-color: #674050; }
-    .project-top { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
-    .project-icon { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 13px; background: var(--accent-soft); color: #e78eac; font-size: 19px; }
-    .project-type { color: #c6aeb8; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-    h3 { margin: 22px 0 9px; font-size: 19px; letter-spacing: -.025em; }
-    .project p { color: var(--muted); font-size: 13px; margin: 0; }
-    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
-    .tag { padding: 5px 9px; border: 1px solid #3a3036; border-radius: 999px; color: #d5c5cd; font-size: 10px; }
-    .note { margin-top: 17px; color: #93848c; font-size: 11px; }
-    .services { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
-    .service { padding: 23px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
-    .service .number { color: #d45b82; font: 12px ui-monospace, monospace; }
-    .service h3 { margin: 15px 0 8px; }
-    .service p { margin: 0; color: var(--muted); font-size: 13px; }
-    .skills-box { display: grid; grid-template-columns: .8fr 1.2fr; gap: 34px; padding: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; }
-    .skills-box p { color: var(--muted); font-size: 14px; margin: 13px 0 0; }
-    .skill-list { display: flex; flex-wrap: wrap; align-content: center; gap: 10px; }
-    .skill { padding: 10px 13px; border-radius: 10px; background: #231c21; border: 1px solid #3a2b33; font-size: 12px; color: #e4d7de; }
-    .contact-card {
-      display: flex; justify-content: space-between; align-items: center; gap: 32px; padding: 36px;
-      border: 1px solid #633047; border-radius: 24px;
-      background: radial-gradient(ellipse at 100% 0%, rgba(142,36,72,.24), transparent 55%), var(--surface);
+    .card:hover { border-color: #81506a; transform: translateY(-3px); }
+    .category { color: var(--pink); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h3 { margin: 12px 0 8px; font-size: 21px; letter-spacing: -.025em; }
+    .card p, .service p { color: var(--muted); font-size: 13px; margin: 0; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .tag { border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; font-size: 10px; color: #d9cbd2; }
+    .services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .service { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 22px; }
+    .service h3 { font-size: 17px; }
+    .number { color: var(--pink); font: 12px monospace; }
+    .about {
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
     }
-    .contact-card p { max-width: 520px; color: var(--muted); font-size: 14px; }
-    .contact-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-    footer { margin-top: 70px; padding: 25px 0 35px; border-top: 1px solid rgba(255,255,255,.07); color: #92858d; font-size: 11px; }
-    .footer-row { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
-    .text-link { text-decoration: underline; text-decoration-color: #72515f; text-underline-offset: 4px; }
-    @media (max-width: 800px) {
-      .hero { grid-template-columns: 1fr; gap: 35px; padding-top: 70px; }
-      .hero-panel { max-width: 560px; }
-      .services { grid-template-columns: 1fr; }
-      .skills-box { grid-template-columns: 1fr; gap: 24px; }
-      .contact-card { align-items: flex-start; flex-direction: column; padding: 27px; }
+    .skills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .skill { padding: 8px 12px; border-radius: 9px; background: #2b2028; font-size: 12px; }
+    .contact {
+      padding: 35px;
+      border: 1px solid #693249;
+      border-radius: 20px;
+      background: radial-gradient(ellipse at top right, #38202b, transparent 60%), var(--panel);
     }
-    @media (max-width: 560px) {
-      .wrap { width: min(var(--max), calc(100% - 28px)); }
-      .nav { align-items: flex-start; }
-      .nav-links { gap: 13px; font-size: 11px; padding-top: 9px; }
-      .nav-links a:nth-child(2) { display: none; }
-      .brand-name { max-width: 125px; line-height: 1.2; }
-      .hero { padding: 56px 0 50px; }
-      .hero-copy { font-size: 15px; }
-      section { padding: 52px 0; }
-      .section-head { display: block; }
-      .section-intro { margin-top: 14px; }
-      .project-grid { grid-template-columns: 1fr; }
-      .project { min-height: auto; }
-      .panel-foot { grid-template-columns: 1fr 1fr; }
-      .footer-row { align-items: flex-start; flex-direction: column; }
-      .button { padding: 11px 14px; }
+    .contact p { max-width: 650px; color: var(--muted); }
+    footer { margin-top: 60px; border-top: 1px solid var(--line); padding: 25px 0; color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+    @media (max-width: 720px) {
+      .hero { padding: 65px 0 45px; }
+      .grid, .services { grid-template-columns: 1fr; }
+      header { align-items: flex-start; flex-direction: column; }
+      nav { flex-wrap: wrap; gap: 16px; }
+      section { padding: 45px 0; }
+      .contact { padding: 25px; }
     }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
   </style>
 </head>
 <body>
-  <header class="wrap nav">
-    <a class="brand" href="#top" aria-label="Nomad Development home">
-      <span class="brand-mark">ND</span>
-      <span class="brand-name">NOMAD DEVELOPMENT</span>
-    </a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="#work">Work</a>
+  <header class="wrap">
+    <a class="logo" href="#home">NOMAD <span>DEVELOPMENT</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Projects</a>
       <a href="#services">Services</a>
       <a href="#about">About</a>
-      <a href="#contact">Contact ↗</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <main id="top">
-    <div class="wrap hero">
-      <div>
-        <div class="eyebrow">Roblox systems · Luau development</div>
-        <h1>Gameplay systems built to <span class="gradient">work.</span></h1>
-        <p class="hero-copy">Nomad Development helps creators and studios turn game ideas into dependable gameplay systems, clean interfaces, and maintainable Roblox experiences.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Discuss a commission <span aria-hidden="true">↗</span></a>
-          <a class="button button-secondary" href="#work">Explore selected work <span aria-hidden="true">↓</span></a>
-        </div>
-        <p class="microcopy">Custom features · System integration · Debugging and maintenance</p>
+  <main>
+    <section class="wrap hero" id="home">
+      <div class="eyebrow">Roblox Development · Systems · Game Design</div>
+      <h1>Building games with <span>purpose.</span></h1>
+      <p class="intro">
+        Nomad Development works on gameplay systems, game mechanics,
+        technical implementation, and balancing. From promotional
+        experiences to complex gameplay loops, the goal is to turn
+        ideas into engaging, functional games.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Commissions &amp; inquiries ↗</a>
+        <a class="btn secondary" href="#work">Explore projects ↓</a>
+      </div>
+    </section>
+
+    <section class="wrap" id="work">
+      <div class="section-head">
+        <div class="eyebrow">Selected work</div>
+        <h2>Games, mechanics &amp; systems.</h2>
+        <p class="section-desc">
+          A selection of projects and technical disciplines. Individual
+          project pages, gameplay footage, and demonstrations can be added
+          as public links become available.
+        </p>
       </div>
 
-      <aside class="hero-panel" aria-label="Development focus">
-        <div class="panel-top">
-          <span class="panel-label">Development focus</span>
-          <span class="status">Built with care</span>
-        </div>
-        <div class="code-window" aria-label="Decorative code sample">
-          <div><span class="lav">local</span> <span class="pink">System</span> = {}</div>
-          <div>&nbsp;</div>
-          <div><span class="pink">function</span> System:Initialize()</div>
-          <div class="indent"><span class="lav">self</span>.Services = {}</div>
-          <div class="indent"><span class="lav">self</span>.Ready = <span class="green">true</span></div>
-          <div class="indent"><span class="pink">return</span> <span class="lav">self</span></div>
-          <div><span class="pink">end</span></div>
-          <div>&nbsp;</div>
-          <div><span class="lav">return</span> System</div>
-        </div>
-        <div class="panel-foot">
-          <div class="mini-stat"><strong>Server + client</strong><span>Gameplay architecture</span></div>
-          <div class="mini-stat"><strong>Luau / Roblox</strong><span>Core development</span></div>
-        </div>
-      </aside>
-    </div>
-
-    <section id="work">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">Selected systems</div>
-            <h2>Work that moves a game forward.</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="category">01 · Promotional experience</div>
+          <h3>UGC Publicity Game</h3>
+          <p>
+            A Roblox experience designed around UGC publicity and
+            presenting content to players through an interactive game.
+            Showcase the experience, its core loop, and the promotional
+            systems that support it.
+          </p>
+          <div class="tags">
+            <span class="tag">Roblox</span>
+            <span class="tag">Promotion</span>
+            <span class="tag">Player experience</span>
           </div>
-          <p class="section-intro">A look at gameplay systems and development patterns explored across Roblox projects. Details can be expanded with clips, screenshots, and public demos as they’re ready.</p>
-        </div>
-        <div class="project-grid">
-          <article class="project">
-            <div class="project-top"><span class="project-icon" aria-hidden="true">▤</span><span class="project-type">Gameplay · Data</span></div>
-            <h3>Inventory &amp; Tool Management</h3>
-            <p>Inventory flows for adding, equipping, and deleting tools, organized around RemoteEvents and persistent player data.</p>
-            <div class="tags"><span class="tag">Luau</span><span class="tag">DataStore</span><span class="tag">RemoteEvents</span></div>
-          </article>
-          <article class="project">
-            <div class="project-top"><span class="project-icon" aria-hidden="true">◇</span><span class="project-type">UI · Monetization</span></div>
-            <h3>Game-pass &amp; HUD Interfaces</h3>
-            <p>Player-facing interface flows for starter packs, shop prompts, close controls, and HUD elements connected to game progression.</p>
-            <div class="tags"><span class="tag">UI systems</span><span class="tag">Game passes</span><span class="tag">Progression</span></div>
-          </article>
-          <article class="project">
-            <div class="project-top"><span class="project-icon" aria-hidden="true">✳</span><span class="project-type">AI · World systems</span></div>
-            <h3>NPC Animals &amp; Rarity Spawning</h3>
-            <p>Animal/NPC organization by rarity, spawn configuration, tagging, and supporting systems for a collectible gameplay loop.</p>
-            <div class="tags"><span class="tag">NPC systems</span><span class="tag">Rarity tables</span><span class="tag">Gameplay loops</span></div>
-          </article>
-          <article class="project">
-            <div class="project-top"><span class="project-icon" aria-hidden="true">⌁</span><span class="project-type">Combat · Interaction</span></div>
-            <h3>Combat &amp; Interaction Logic</h3>
-            <p>Work on interaction timing, swing cooldowns, health/tag-based NPC handling, and the logic that connects player actions to game state.</p>
-            <div class="tags"><span class="tag">Cooldowns</span><span class="tag">Health</span><span class="tag">State logic</span></div>
-          </article>
-        </div>
-        <p class="note">Portfolio note: these are summaries of systems worked on, not claims of shipped client titles. Add only screenshots, videos, and code you have permission to share.</p>
-      </div>
-    </section>
+        </article>
 
-    <section id="services">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">How I can help</div>
-            <h2>From a stubborn bug to a full feature.</h2>
+        <article class="card">
+          <div class="category">02 · Tycoon &amp; progression</div>
+          <h3>Plothera</h3>
+          <p>
+            Tycoon gameplay and progression systems built around player
+            goals, repeatable gameplay loops, upgrades, and the relationship
+            between progression and rewards.
+          </p>
+          <div class="tags">
+            <span class="tag">Tycoon systems</span>
+            <span class="tag">Progression</span>
+            <span class="tag">Gameplay loops</span>
           </div>
-          <p class="section-intro">Clear scope and communication first. We can agree on the deliverables, timeline, and budget before work begins.</p>
-        </div>
-        <div class="services">
-          <article class="service"><span class="number">01 / FIX</span><h3>Debugging &amp; maintenance</h3><p>Investigate errors, repair existing scripts, and help keep established systems working as intended.</p></article>
-          <article class="service"><span class="number">02 / BUILD</span><h3>Custom gameplay features</h3><p>Build focused features such as inventory flows, interactions, progression logic, and player-facing UI.</p></article>
-          <article class="service"><span class="number">03 / INTEGRATE</span><h3>Systems &amp; integration</h3><p>Connect related gameplay components, organize event flows, and make new features fit the existing project.</p></article>
+        </article>
+
+        <article class="card">
+          <div class="category">03 · Sports mechanics</div>
+          <h3>Competitive Sports Games</h3>
+          <p>
+            Sports gameplay across air hockey, ice hockey, soccer, and
+            football. Focus areas include player interaction, movement,
+            ball or puck behavior, match logic, and responsive controls.
+          </p>
+          <div class="tags">
+            <span class="tag">Air hockey</span>
+            <span class="tag">Ice hockey</span>
+            <span class="tag">Soccer</span>
+            <span class="tag">Football</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="category">04 · Simulation &amp; physics</div>
+          <h3>Aircraft Systems &amp; Physics</h3>
+          <p>
+            Aircraft gameplay systems focused on flight behavior, control
+            response, movement, and physics-driven interactions. Add a
+            demonstration to show the handling and mechanics in action.
+          </p>
+          <div class="tags">
+            <span class="tag">Aircraft systems</span>
+            <span class="tag">Physics</span>
+            <span class="tag">Simulation</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="services">
+      <div class="section-head">
+        <div class="eyebrow">What I offer</div>
+        <h2>Development services.</h2>
+        <p class="section-desc">
+          Services can be scoped as individual tasks, custom features,
+          or broader support for an existing game.
+        </p>
+      </div>
+
+      <div class="services">
+        <article class="service">
+          <div class="number">01 / DEVELOPMENT</div>
+          <h3>Gameplay &amp; systems</h3>
+          <p>
+            Custom Luau scripting, gameplay mechanics, inventory and
+            progression systems, interfaces, debugging, and integration
+            with existing Roblox projects.
+          </p>
+        </article>
+
+        <article class="service">
+          <div class="number">02 / GAME DESIGN</div>
+          <h3>Game balancing</h3>
+          <p>
+            Balancing sheets, economy tuning, upgrade costs, reward
+            curves, progression pacing, and numerical analysis to help
+            make a game's systems fair, engaging, and coherent.
+          </p>
+        </article>
+
+        <article class="service">
+          <div class="number">03 / TECHNICAL DESIGN</div>
+          <h3>Physics &amp; mechanics</h3>
+          <p>
+            Assistance with movement, sports interactions, aircraft
+            behavior, physics-driven gameplay, and tuning mechanics
+            to meet a project's design goals.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="about">
+      <div class="about">
+        <div class="eyebrow">About Nomad Development</div>
+        <h2>Technical thinking meets game design.</h2>
+        <p class="section-desc">
+          I work across scripting, gameplay systems, technical problem
+          solving, and game balancing. I value clear requirements,
+          maintainable implementations, and systems that make sense
+          within the larger player experience.
+        </p>
+        <div class="skills">
+          <span class="skill">Roblox Studio</span>
+          <span class="skill">Luau</span>
+          <span class="skill">Gameplay systems</span>
+          <span class="skill">Tycoon mechanics</span>
+          <span class="skill">Game balancing</span>
+          <span class="skill">Economy design</span>
+          <span class="skill">Sports mechanics</span>
+          <span class="skill">Physics systems</span>
+          <span class="skill">UI integration</span>
+          <span class="skill">Debugging</span>
         </div>
       </div>
     </section>
 
-    <section id="about">
-      <div class="wrap skills-box">
-        <div>
-          <div class="section-kicker">About Nomad</div>
-          <h2>Practical development. Clear communication.</h2>
-          <p>I work with Roblox creators and teams to build, connect, and improve gameplay systems. The goal is straightforward: understandable code, reliable behavior, and features that fit the game—not just a script that works in isolation.</p>
-        </div>
-        <div class="skill-list" aria-label="Skills and focus areas">
-          <span class="skill">Roblox Studio</span><span class="skill">Luau</span><span class="skill">RemoteEvents</span><span class="skill">DataStore workflows</span><span class="skill">Inventory systems</span><span class="skill">UI integration</span><span class="skill">NPC logic</span><span class="skill">Gameplay debugging</span><span class="skill">Git / collaboration</span><span class="skill">System maintenance</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="wrap contact-card">
-        <div>
-          <div class="section-kicker">Have a project in mind?</div>
-          <h2>Let’s make it work.</h2>
-          <p>Send a short description of the game, what you need built or fixed, and any relevant deadlines. I’ll review the scope and we can discuss the next step.</p>
-        </div>
-        <div class="contact-actions">
-          <a class="button button-primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Ko-fi commissions ↗</a>
-          <a class="button button-secondary" href="mailto:">Email about a project ↗</a>
+    <section class="wrap" id="contact">
+      <div class="contact">
+        <div class="eyebrow">Let's work together</div>
+        <h2>Have a game in mind?</h2>
+        <p>
+          Tell me about your project, the systems you need, or the
+          balancing problem you want to solve. Share the scope and
+          expected timeline so we can discuss a suitable approach.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Ko-fi commissions ↗</a>
+          <a class="btn secondary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Project inquiries ↗</a>
         </div>
       </div>
     </section>
@@ -285,13 +316,13 @@
 
   <footer>
     <div class="wrap footer-row">
-      <span>© <span id="year">2026</span> Nomad Development. Built with intent.</span>
-      <span>Roblox systems &amp; gameplay development</span>
+      <span>© <span id="year">2026</span> Nomad Development</span>
+      <span>Roblox development · Gameplay · Balancing</span>
     </div>
   </footer>
+
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
-
