@@ -4,325 +4,1052 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#141214">
-  <meta name="description" content="Nomad Development — Roblox game development, gameplay systems, aircraft physics, sports mechanics, and game balancing.">
-  <title>Nomad Development | Roblox Game Development</title>
+  <meta name="theme-color" content="#0b0b0e">
+  <meta name="description" content="Nomad Development — Roblox scripting, gameplay systems, physics, balancing, UI, and full-stack game development.">
+  <title>Nomad Development — Roblox Game Development</title>
+
   <style>
     :root {
-      --bg: #141214;
-      --panel: #1e1a1e;
-      --line: #382b34;
-      --text: #f5eff2;
-      --muted: #b9adb5;
-      --red: #a12e54;
-      --pink: #e17a9e;
+      --bg: #0b0b0e;
+      --surface: #111115;
+      --surface-raised: #17171d;
+      --border: #29252b;
+      --text: #f3f0f2;
+      --muted: #a5a0a7;
+      --red: #b51232;
+      --red-bright: #e02448;
+      --red-dark: #530b1d;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
     body {
       margin: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(ellipse at 80% 0%, #260a132e, transparent 36rem),
+        var(--bg);
       color: var(--text);
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      line-height: 1.65;
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
-    a { color: inherit; text-decoration: none; }
-    a:focus-visible { outline: 2px solid var(--pink); outline-offset: 4px; }
-    .wrap { width: min(1100px, 90%); margin: auto; }
-    header {
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--red-bright);
+      outline-offset: 4px;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .accent {
+      color: var(--red-bright);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #0b0b0eeb;
+      border-bottom: 1px solid #29252bcc;
+      backdrop-filter: blur(16px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #762037;
+      border-radius: 9px;
+      background: #3b0b19;
+      color: #ff5270;
+      font: 700 17px var(--mono);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .nav-links .nav-contact {
+      color: #fff;
+      background: var(--red);
+      border-radius: 7px;
+      padding: 8px 13px;
+    }
+
+    .hero {
+      padding: 92px 0 82px;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 52px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f05a75;
+      font: 12px var(--mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e02448;
+      box-shadow: 0 0 12px #e0244870;
+    }
+
+    h1 {
+      margin: 22px 0;
+      font-size: clamp(42px, 6vw, 69px);
+      line-height: 1.04;
+      letter-spacing: -0.065em;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--red-bright);
+    }
+
+    .hero-copy {
+      max-width: 510px;
+      color: #b7b1ba;
+      font-size: 16px;
+    }
+
+    .hero-copy strong {
+      color: #f5f1f4;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 650;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: #713047;
+    }
+
+    .button-primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+
+    .button-primary:hover {
+      background: #cf173b;
+      border-color: #cf173b;
+    }
+
+    .button-secondary {
+      background: #141318;
+      color: #eee8ed;
+    }
+
+    .editor {
+      overflow: hidden;
+      border: 1px solid #38232c;
+      border-radius: 12px;
+      background: #0e0e12;
+      box-shadow: 0 24px 90px #0008, 0 0 50px #6f0d2510;
+      transform: rotate(1deg);
+    }
+
+    .editor-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 16px;
+      background: #151318;
+      border-bottom: 1px solid #29232a;
+    }
+
+    .window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #63303c;
+    }
+
+    .window-dot:nth-child(2) {
+      background: #815f39;
+    }
+
+    .window-dot:nth-child(3) {
+      background: #3e674d;
+    }
+
+    .editor-name {
+      margin-left: 8px;
+      color: #8d8490;
+      font: 11px var(--mono);
+    }
+
+    .editor-body {
+      padding: 22px 18px 25px;
+      overflow-x: auto;
+      font: 12px/2 var(--mono);
+    }
+
+    .code-line {
+      display: flex;
+      gap: 19px;
+      white-space: pre;
+    }
+
+    .line-no {
+      width: 15px;
+      flex-shrink: 0;
+      text-align: right;
+      color: #514a56;
+      user-select: none;
+    }
+
+    .code-comment {
+      color: #746b79;
+    }
+
+    .code-purple {
+      color: #c6a0ff;
+    }
+
+    .code-red {
+      color: #ff718c;
+    }
+
+    .code-blue {
+      color: #91c9ff;
+    }
+
+    .code-green {
+      color: #9bd6a5;
+    }
+
+    .code-white {
+      color: #e7dfe8;
+    }
+
+    .code-orange {
+      color: #ffbf86;
+    }
+
+    .editor-footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      border-top: 1px solid #29232a;
+      color: #827986;
+      font: 10px var(--mono);
+    }
+
+    .section {
+      padding: 76px 0;
+      border-top: 1px solid #211e24;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
       gap: 20px;
-      padding: 24px 0;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 30px;
     }
-    .logo { font-weight: 850; letter-spacing: -.04em; }
-    .logo span { color: var(--pink); }
-    nav { display: flex; gap: 24px; color: var(--muted); font-size: 13px; }
-    nav a:hover, .text-link:hover { color: white; }
-    .hero { padding: 100px 0 80px; }
-    .eyebrow {
-      color: var(--pink);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      font-weight: 800;
+
+    .section-index {
+      color: var(--red-bright);
+      font: 12px var(--mono);
+      letter-spacing: 0.1em;
     }
-    h1 {
-      max-width: 850px;
-      margin: 18px 0;
-      font-size: clamp(43px, 7vw, 78px);
-      line-height: 1.04;
-      letter-spacing: -.065em;
+
+    h2 {
+      margin: 8px 0 0;
+      font-size: clamp(29px, 4vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.05em;
     }
-    h1 span { color: var(--pink); }
-    .intro { max-width: 650px; color: var(--muted); font-size: 17px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-    .btn {
-      display: inline-block;
-      padding: 12px 19px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-weight: 750;
+
+    .section-intro {
+      max-width: 450px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .project-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+      padding: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: linear-gradient(145deg, #151419, #101014 75%);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .project-card::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 80px;
+      content: "";
+      pointer-events: none;
+      background: radial-gradient(circle at top right, #a5123021, transparent 72%);
+    }
+
+    .project-card:hover {
+      transform: translateY(-3px);
+      border-color: #682338;
+    }
+
+    .project-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .project-number {
+      color: #716773;
+      font: 12px var(--mono);
+    }
+
+    .project-type {
+      padding: 4px 8px;
+      border: 1px solid #47212d;
+      border-radius: 5px;
+      color: #ed8298;
+      background: #2b101a;
+      font: 10px var(--mono);
+    }
+
+    h3 {
+      margin: 0 0 7px;
+      font-size: 22px;
+      letter-spacing: -0.035em;
+    }
+
+    .role {
+      margin-bottom: 14px;
+      color: #f07891;
+      font: 11px var(--mono);
+    }
+
+    .project-card p {
+      margin: 0;
+      color: #aaa3ae;
       font-size: 13px;
-      transition: .2s;
+      line-height: 1.85;
     }
-    .btn:hover { transform: translateY(-2px); }
-    .primary { background: var(--red); border-color: var(--red); }
-    .primary:hover { background: #b53a65; }
-    .secondary { background: var(--panel); }
-    section { padding: 65px 0; }
-    .section-head { margin-bottom: 28px; }
-    h2 { margin: 8px 0; font-size: clamp(30px, 4vw, 43px); line-height: 1.15; letter-spacing: -.045em; }
-    .section-desc { max-width: 680px; color: var(--muted); font-size: 14px; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
-    .card {
-      background: linear-gradient(145deg, #211c21, #191619);
-      border: 1px solid var(--line);
-      border-radius: 17px;
-      padding: 25px;
-      transition: border-color .2s, transform .2s;
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 22px;
     }
-    .card:hover { border-color: #81506a; transform: translateY(-3px); }
-    .category { color: var(--pink); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-    h3 { margin: 12px 0 8px; font-size: 21px; letter-spacing: -.025em; }
-    .card p, .service p { color: var(--muted); font-size: 13px; margin: 0; }
-    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
-    .tag { border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; font-size: 10px; color: #d9cbd2; }
-    .services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-    .service { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 22px; }
-    .service h3 { font-size: 17px; }
-    .number { color: var(--pink); font: 12px monospace; }
-    .about {
+
+    .tag {
+      padding: 4px 8px;
+      border: 1px solid #302a33;
+      border-radius: 5px;
+      color: #b9b0bd;
+      font: 10px var(--mono);
+    }
+
+    .wide-card {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .wide-card .project-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 32px;
+    }
+
+    .wide-card .project-tags {
+      margin-top: 0;
+      padding-top: 0;
+      align-content: start;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .service {
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    .service-symbol {
+      display: inline-grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      margin-bottom: 16px;
+      border: 1px solid #5b1a2b;
+      border-radius: 8px;
+      background: #2c1019;
+      color: #ff718c;
+      font: 15px var(--mono);
+    }
+
+    .service h3 {
+      font-size: 16px;
+    }
+
+    .service p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .about-panel {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 36px;
       padding: 30px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: linear-gradient(115deg, #171217, #111115 60%);
     }
-    .skills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
-    .skill { padding: 8px 12px; border-radius: 9px; background: #2b2028; font-size: 12px; }
-    .contact {
-      padding: 35px;
-      border: 1px solid #693249;
-      border-radius: 20px;
-      background: radial-gradient(ellipse at top right, #38202b, transparent 60%), var(--panel);
+
+    .about-panel p {
+      margin: 0;
+      color: #b5aeb9;
+      font-size: 14px;
     }
-    .contact p { max-width: 650px; color: var(--muted); }
-    footer { margin-top: 60px; border-top: 1px solid var(--line); padding: 25px 0; color: var(--muted); font-size: 12px; }
-    .footer-row { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
-    @media (max-width: 720px) {
-      .hero { padding: 65px 0 45px; }
-      .grid, .services { grid-template-columns: 1fr; }
-      header { align-items: flex-start; flex-direction: column; }
-      nav { flex-wrap: wrap; gap: 16px; }
-      section { padding: 45px 0; }
-      .contact { padding: 25px; }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: start;
+      gap: 9px;
     }
+
+    .skill {
+      padding: 7px 10px;
+      border: 1px solid #38303b;
+      border-radius: 6px;
+      color: #ddd4df;
+      font: 11px var(--mono);
+    }
+
+    .contact-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 30px;
+      padding: 34px;
+      border: 1px solid #4d1928;
+      border-radius: 12px;
+      background:
+        radial-gradient(ellipse at 100% 0%, #6c10252c, transparent 55%),
+        #121014;
+    }
+
+    .contact-panel p {
+      max-width: 510px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 175px;
+    }
+
+    .contact-actions .button {
+      width: 100%;
+    }
+
+    .discord-note {
+      margin-top: 15px;
+      color: #9d94a0;
+      font: 12px var(--mono);
+    }
+
+    footer {
+      padding: 24px 0;
+      border-top: 1px solid #211e24;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      color: #817985;
+      font: 11px var(--mono);
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 38px;
+        padding-top: 65px;
+      }
+
+      .editor {
+        transform: none;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-intro {
+        margin-top: 12px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .about-panel {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .contact-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .contact-actions .button {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .container {
+        width: min(100% - 28px, 1100px);
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 13px 0;
+        gap: 12px;
+      }
+
+      .nav-links {
+        gap: 14px;
+        font-size: 12px;
+      }
+
+      .project-grid,
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wide-card {
+        grid-column: auto;
+      }
+
+      .wide-card .project-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .project-card {
+        padding: 20px;
+      }
+
+      .about-panel,
+      .contact-panel {
+        padding: 23px;
+      }
+
+      .section {
+        padding: 58px 0;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .contact-actions {
+        flex-direction: column;
+      }
+
+      .contact-actions .button {
+        width: 100%;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { transition: none !important; }
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <header class="wrap">
-    <a class="logo" href="#home">NOMAD <span>DEVELOPMENT</span></a>
-    <nav aria-label="Main navigation">
-      <a href="#work">Projects</a>
-      <a href="#services">Services</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Nomad Development home">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>nomad<span class="accent">.</span>development</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#work">Projects</a>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a class="nav-contact" href="#contact">Contact ↗</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="wrap hero" id="home">
-      <div class="eyebrow">Roblox Development · Systems · Game Design</div>
-      <h1>Building games with <span>purpose.</span></h1>
-      <p class="intro">
-        Nomad Development works on gameplay systems, game mechanics,
-        technical implementation, and balancing. From promotional
-        experiences to complex gameplay loops, the goal is to turn
-        ideas into engaging, functional games.
-      </p>
-      <div class="actions">
-        <a class="btn primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Commissions &amp; inquiries ↗</a>
-        <a class="btn secondary" href="#work">Explore projects ↓</a>
+    <section class="container hero" id="home">
+      <div>
+        <div class="eyebrow">
+          <span class="status-dot"></span>
+          Roblox development · Independent
+        </div>
+
+        <h1>
+          Building games.
+          <span>Engineering play.</span>
+        </h1>
+
+        <p class="hero-copy">
+          I'm <strong>Nomad</strong>, a game developer specializing in
+          Lua/Luau scripting, gameplay systems, physics, UI functionality,
+          balancing, and full-stack Roblox development.
+          I work from core mechanics to the details that make a game feel
+          complete: performance, progression, and polish.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#work">
+            Explore projects <span aria-hidden="true">↘</span>
+          </a>
+          <a class="button button-secondary"
+             href="https://ko-fi.com/nomadedevelopment"
+             target="_blank" rel="noopener noreferrer">
+            Commission me ↗
+          </a>
+        </div>
+      </div>
+
+      <aside class="editor" aria-label="Decorative code editor">
+        <div class="editor-top">
+          <span class="window-dot"></span>
+          <span class="window-dot"></span>
+          <span class="window-dot"></span>
+          <span class="editor-name">gameplay_system.luau</span>
+        </div>
+
+        <div class="editor-body" aria-hidden="true">
+          <div class="code-line"><span class="line-no">01</span><span class="code-comment">-- turn ideas into systems</span></div>
+          <div class="code-line"><span class="line-no">02</span><span></span></div>
+          <div class="code-line"><span class="line-no">03</span><span><span class="code-purple">local</span> <span class="code-blue">Game</span> = {}</span></div>
+          <div class="code-line"><span class="line-no">04</span><span></span></div>
+          <div class="code-line"><span class="line-no">05</span><span><span class="code-purple">function</span> <span class="code-blue">Game</span>:<span class="code-orange">Initialize</span>()</span></div>
+          <div class="code-line"><span class="line-no">06</span><span>  <span class="code-purple">self</span>.systems = {</span></div>
+          <div class="code-line"><span class="line-no">07</span><span>    <span class="code-green">"gameplay"</span>,</span></div>
+          <div class="code-line"><span class="line-no">08</span><span>    <span class="code-green">"physics"</span>,</span></div>
+          <div class="code-line"><span class="line-no">09</span><span>    <span class="code-green">"progression"</span>,</span></div>
+          <div class="code-line"><span class="line-no">10</span><span>    <span class="code-green">"polish"</span></span></div>
+          <div class="code-line"><span class="line-no">11</span><span>  }</span></div>
+          <div class="code-line"><span class="line-no">12</span><span></span></div>
+          <div class="code-line"><span class="line-no">13</span><span>  <span class="code-purple">return</span> <span class="code-red">"ready"</span></span></div>
+          <div class="code-line"><span class="line-no">14</span><span><span class="code-purple">end</span></span></div>
+          <div class="code-line"><span class="line-no">15</span><span></span></div>
+          <div class="code-line"><span class="line-no">16</span><span><span class="code-comment">-- optimize. test. refine.</span></span></div>
+        </div>
+
+        <div class="editor-footer">
+          <span>LU A / ROBLOX</span>
+          <span class="accent">● SYSTEMS READY</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="section-index">01 / SELECTED WORK</div>
+            <h2>Projects & contributions</h2>
+          </div>
+          <p class="section-intro">
+            A selection of projects spanning physics-driven gameplay,
+            horror, UGC systems, competitive mechanics, and game balance.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card">
+            <div class="project-top">
+              <span class="project-number">PROJECT_001</span>
+              <span class="project-type">PHYSICS / GAMEPLAY</span>
+            </div>
+            <h3>Project Air Hockey</h3>
+            <div class="role">ROLE: LEAD DEVELOPER</div>
+            <p>
+              Led development of the core air hockey system, establishing
+              its physics, raycasting, and supporting gameplay functionality.
+              Also contributed to balancing, UI integration, and design
+              adjustments needed to make the experience work as a whole.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Physics</span>
+              <span class="tag">Raycasting</span>
+              <span class="tag">Optimization</span>
+              <span class="tag">UI Integration</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-top">
+              <span class="project-number">PROJECT_002</span>
+              <span class="project-type">HORROR</span>
+            </div>
+            <h3>Soloure</h3>
+            <div class="role">ROLE: LEAD SCRIPTER</div>
+            <p>
+              Worked across the game's development, implementing gameplay
+              mechanics and UI while handling fixes, balancing, and visual
+              design. Helped shape the experience through both technical
+              implementation and broader gameplay decisions.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Gameplay Systems</span>
+              <span class="tag">UI</span>
+              <span class="tag">Bug Fixes</span>
+              <span class="tag">Game Design</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-top">
+              <span class="project-number">PROJECT_003</span>
+              <span class="project-type">UGC / UI</span>
+            </div>
+            <h3>DZA UGC Game</h3>
+            <div class="role">ROLE: SOLE SCRIPTER</div>
+            <p>
+              Built the complete interface for a UGC purchase-focused game,
+              including UI design, interactive functionality, and marketplace
+              placements. Developed the user-facing foundation and considered
+              its marketing potential as part of the experience.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Full UI</span>
+              <span class="tag">UI Functionality</span>
+              <span class="tag">Marketplace</span>
+              <span class="tag">UX</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-top">
+              <span class="project-number">PROJECT_004</span>
+              <span class="project-type">BALANCING / SYSTEMS</span>
+            </div>
+            <h3>Tagger!</h3>
+            <div class="role">ROLE: ASSISTANT SCRIPTER</div>
+            <p>
+              Created structured balancing sheets covering gameplay,
+              progression, and monetization. Also contributed to code
+              polishing, helping improve the clarity and quality of the
+              game's existing scripting.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Balancing</span>
+              <span class="tag">Progression</span>
+              <span class="tag">Monetization</span>
+              <span class="tag">Code Polish</span>
+            </div>
+          </article>
+
+          <article class="project-card wide-card">
+            <div class="project-top">
+              <span class="project-number">PROJECT_005</span>
+              <span class="project-type">SIMULATION / PHYSICS</span>
+            </div>
+            <div class="project-layout">
+              <div>
+                <h3>Aircraft Module</h3>
+                <div class="role">ROLE: SOLE SCRIPTER</div>
+                <p>
+                  Developed an aircraft system focused on flight physics and
+                  responsive aerial mechanics, including strafing and bombing.
+                  Built the core scripting that connects aircraft movement
+                  with combat-oriented functionality.
+                </p>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Aircraft Physics</span>
+                <span class="tag">Flight Mechanics</span>
+                <span class="tag">Strafing</span>
+                <span class="tag">Bombing Systems</span>
+                <span class="tag">Luau</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="section-intro" style="margin-top: 20px;">
+          Explore additional work through my
+          <a class="accent"
+             href="https://create.roblox.com/talent/creators/517928615"
+             target="_blank" rel="noopener noreferrer">Roblox Creator Page ↗</a>.
+        </p>
       </div>
     </section>
 
-    <section class="wrap" id="work">
-      <div class="section-head">
-        <div class="eyebrow">Selected work</div>
-        <h2>Games, mechanics &amp; systems.</h2>
-        <p class="section-desc">
-          A selection of projects and technical disciplines. Individual
-          project pages, gameplay footage, and demonstrations can be added
-          as public links become available.
-        </p>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <div class="category">01 · Promotional experience</div>
-          <h3>UGC Publicity Game</h3>
-          <p>
-            A Roblox experience designed around UGC publicity and
-            presenting content to players through an interactive game.
-            Showcase the experience, its core loop, and the promotional
-            systems that support it.
-          </p>
-          <div class="tags">
-            <span class="tag">Roblox</span>
-            <span class="tag">Promotion</span>
-            <span class="tag">Player experience</span>
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="section-index">02 / CAPABILITIES</div>
+            <h2>What I bring to a project</h2>
           </div>
-        </article>
-
-        <article class="card">
-          <div class="category">02 · Tycoon &amp; progression</div>
-          <h3>Plothera</h3>
-          <p>
-            Tycoon gameplay and progression systems built around player
-            goals, repeatable gameplay loops, upgrades, and the relationship
-            between progression and rewards.
+          <p class="section-intro">
+            From building a mechanic from scratch to improving an existing
+            game, I focus on functionality, maintainability, and player experience.
           </p>
-          <div class="tags">
-            <span class="tag">Tycoon systems</span>
-            <span class="tag">Progression</span>
-            <span class="tag">Gameplay loops</span>
-          </div>
-        </article>
+        </div>
 
-        <article class="card">
-          <div class="category">03 · Sports mechanics</div>
-          <h3>Competitive Sports Games</h3>
-          <p>
-            Sports gameplay across air hockey, ice hockey, soccer, and
-            football. Focus areas include player interaction, movement,
-            ball or puck behavior, match logic, and responsive controls.
-          </p>
-          <div class="tags">
-            <span class="tag">Air hockey</span>
-            <span class="tag">Ice hockey</span>
-            <span class="tag">Soccer</span>
-            <span class="tag">Football</span>
-          </div>
-        </article>
+        <div class="services-grid">
+          <article class="service">
+            <span class="service-symbol">&lt;/&gt;</span>
+            <h3>Scripting & systems</h3>
+            <p>
+              Luau gameplay logic, interactive systems, progression,
+              game loops, mechanics, and reliable implementation.
+            </p>
+          </article>
 
-        <article class="card">
-          <div class="category">04 · Simulation &amp; physics</div>
-          <h3>Aircraft Systems &amp; Physics</h3>
-          <p>
-            Aircraft gameplay systems focused on flight behavior, control
-            response, movement, and physics-driven interactions. Add a
-            demonstration to show the handling and mechanics in action.
-          </p>
-          <div class="tags">
-            <span class="tag">Aircraft systems</span>
-            <span class="tag">Physics</span>
-            <span class="tag">Simulation</span>
-          </div>
-        </article>
-      </div>
-    </section>
+          <article class="service">
+            <span class="service-symbol">◎</span>
+            <h3>Physics & mechanics</h3>
+            <p>
+              Physics-driven gameplay, raycasting, movement systems,
+              aircraft mechanics, and responsive interactions.
+            </p>
+          </article>
 
-    <section class="wrap" id="services">
-      <div class="section-head">
-        <div class="eyebrow">What I offer</div>
-        <h2>Development services.</h2>
-        <p class="section-desc">
-          Services can be scoped as individual tasks, custom features,
-          or broader support for an existing game.
-        </p>
-      </div>
+          <article class="service">
+            <span class="service-symbol">▤</span>
+            <h3>UI & functionality</h3>
+            <p>
+              Interface implementation, interactive menus, UI integration,
+              and player-facing systems designed around usability.
+            </p>
+          </article>
 
-      <div class="services">
-        <article class="service">
-          <div class="number">01 / DEVELOPMENT</div>
-          <h3>Gameplay &amp; systems</h3>
-          <p>
-            Custom Luau scripting, gameplay mechanics, inventory and
-            progression systems, interfaces, debugging, and integration
-            with existing Roblox projects.
-          </p>
-        </article>
+          <article class="service">
+            <span class="service-symbol">↗</span>
+            <h3>Balancing & progression</h3>
+            <p>
+              Structured balance sheets for gameplay, progression,
+              monetization, and the wider game economy.
+            </p>
+          </article>
 
-        <article class="service">
-          <div class="number">02 / GAME DESIGN</div>
-          <h3>Game balancing</h3>
-          <p>
-            Balancing sheets, economy tuning, upgrade costs, reward
-            curves, progression pacing, and numerical analysis to help
-            make a game's systems fair, engaging, and coherent.
-          </p>
-        </article>
+          <article class="service">
+            <span class="service-symbol">⌘</span>
+            <h3>Optimization & maintenance</h3>
+            <p>
+              Performance-conscious scripting, debugging, code cleanup,
+              fixes, and improving existing systems.
+            </p>
+          </article>
 
-        <article class="service">
-          <div class="number">03 / TECHNICAL DESIGN</div>
-          <h3>Physics &amp; mechanics</h3>
-          <p>
-            Assistance with movement, sports interactions, aircraft
-            behavior, physics-driven gameplay, and tuning mechanics
-            to meet a project's design goals.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="wrap" id="about">
-      <div class="about">
-        <div class="eyebrow">About Nomad Development</div>
-        <h2>Technical thinking meets game design.</h2>
-        <p class="section-desc">
-          I work across scripting, gameplay systems, technical problem
-          solving, and game balancing. I value clear requirements,
-          maintainable implementations, and systems that make sense
-          within the larger player experience.
-        </p>
-        <div class="skills">
-          <span class="skill">Roblox Studio</span>
-          <span class="skill">Luau</span>
-          <span class="skill">Gameplay systems</span>
-          <span class="skill">Tycoon mechanics</span>
-          <span class="skill">Game balancing</span>
-          <span class="skill">Economy design</span>
-          <span class="skill">Sports mechanics</span>
-          <span class="skill">Physics systems</span>
-          <span class="skill">UI integration</span>
-          <span class="skill">Debugging</span>
+          <article class="service">
+            <span class="service-symbol">✳</span>
+            <h3>Design & polish</h3>
+            <p>
+              Practical design adjustments, gameplay flow, visual
+              considerations, and refinement across the experience.
+            </p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="wrap" id="contact">
-      <div class="contact">
-        <div class="eyebrow">Let's work together</div>
-        <h2>Have a game in mind?</h2>
-        <p>
-          Tell me about your project, the systems you need, or the
-          balancing problem you want to solve. Share the scope and
-          expected timeline so we can discuss a suitable approach.
-        </p>
-        <div class="actions">
-          <a class="btn primary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Ko-fi commissions ↗</a>
-          <a class="btn secondary" href="https://ko-fi.com/nomadedevelopment" target="_blank" rel="noopener noreferrer">Project inquiries ↗</a>
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="section-index">03 / APPROACH</div>
+            <h2>More than just code</h2>
+          </div>
+        </div>
+
+        <div class="about-panel">
+          <p>
+            I approach development from both a technical and gameplay
+            perspective. A system should not only work; it should fit the
+            game, feel right to players, and remain practical to maintain.
+            My experience ranges from individual mechanics to broader
+            systems that connect UI, progression, balancing, and gameplay.
+          </p>
+
+          <div class="skill-list">
+            <span class="skill">Roblox Studio</span>
+            <span class="skill">Lua / Luau</span>
+            <span class="skill">C++</span>
+            <span class="skill">JavaScript</span>
+            <span class="skill">Gameplay Systems</span>
+            <span class="skill">Physics</span>
+            <span class="skill">UI Implementation</span>
+            <span class="skill">Optimization</span>
+            <span class="skill">Game Balancing</span>
+            <span class="skill">GitHub</span>
+            <span class="skill">Rojo</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-panel">
+          <div>
+            <div class="section-index">04 / START A PROJECT</div>
+            <h2>Let's build something <span class="accent">worth playing.</span></h2>
+            <p>
+              Need a gameplay system, a complete mechanic, UI functionality,
+              balancing, or help refining an existing Roblox game?
+              Reach out with your idea and what you're looking to build.
+            </p>
+            <div class="discord-note">
+              DISCORD: nomadw
+            </div>
+          </div>
+
+          <div class="contact-actions">
+            <a class="button button-primary"
+               href="https://ko-fi.com/nomadedevelopment"
+               target="_blank" rel="noopener noreferrer">
+              Ko-fi commissions ↗
+            </a>
+            <a class="button button-secondary"
+               href="https://create.roblox.com/talent/creators/517928615"
+               target="_blank" rel="noopener noreferrer">
+              Roblox Creator Page ↗
+            </a>
+            <a class="button button-secondary"
+               href="https://discord.com/app"
+               target="_blank" rel="noopener noreferrer">
+              Open Discord ↗
+            </a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="wrap footer-row">
-      <span>© <span id="year">2026</span> Nomad Development</span>
-      <span>Roblox development · Gameplay · Balancing</span>
+    <div class="container footer-inner">
+      <span>© <span id="year">2026</span> NOMAD DEVELOPMENT</span>
+      <span>BUILT WITH INTENTION <span class="accent">/</span> POWERED BY LUau</span>
     </div>
   </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
 </body>
 </html>
