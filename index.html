@@ -489,6 +489,12 @@
       transition: transform 0.2s, border-color 0.2s;
     }
 
+    .studio-item a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .studio-item:hover {
       transform: translateY(-2px);
       border-color: var(--red-bright);
@@ -506,6 +512,61 @@
       font: 700 11px var(--mono);
       letter-spacing: 0.1em;
       text-transform: uppercase;
+    }
+
+    /* Commission Rules Styles */
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .rule-item {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px 24px;
+      border-left: 3px solid var(--red-bright);
+      border-radius: 0 10px 10px 0;
+      background: var(--surface);
+      border-top: 1px solid #1c1c22;
+      border-right: 1px solid #1c1c22;
+      border-bottom: 1px solid #1c1c22;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .rule-item:hover {
+      background: #15151c;
+      border-top-color: #33272e;
+      border-right-color: #33272e;
+      border-bottom-color: #33272e;
+    }
+
+    .rule-content {
+      max-width: 880px;
+    }
+
+    .rule-title {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .rule-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .rule-number {
+      color: #615a66;
+      font: 700 13px var(--mono);
+      user-select: none;
     }
 
     .services-grid {
@@ -712,8 +773,9 @@
         gap: 18px;
       }
 
-      .project-card {
-        padding: 20px;
+      .project-card,
+      .rule-item {
+        padding: 18px;
       }
 
       .studio-item {
@@ -767,6 +829,7 @@
 
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#work">Projects</a>
+        <a href="#rules">Rules</a>
         <a href="#services">Services</a>
         <a href="#about">About</a>
         <a class="nav-contact" href="#contact">Contact ↗</a>
@@ -983,19 +1046,32 @@
 
           <div class="studio-grid">
             <div class="studio-item">
-              <img src="Arp.png.webp" alt="Arp Logo" loading="lazy">
+              <a href="https://www.roblox.com/communities/17377401/ARP-Community#!/about" target="_blank" rel="noopener noreferrer">
+                <img src="Arp.png.webp" alt="ARP Community" loading="lazy">
+              </a>
             </div>
             <div class="studio-item">
-              <img src="OTP.png.webp" alt="On the Peninsula Logo" loading="lazy">
+              <a href="https://www.roblox.com/communities/33727810/On-the-Peninsula#!/about" target="_blank" rel="noopener noreferrer">
+                <img src="OTP.png.webp" alt="On the Peninsula" loading="lazy">
+              </a>
             </div>
             <div class="studio-item">
-              <img src="EH.png.webp" alt="EH Studio Logo" loading="lazy">
+              <a href="https://www.roblox.com/communities/4311276/Echelon-Hotels-Group#!/about" target="_blank" rel="noopener noreferrer">
+                <img src="EH.png.webp" alt="Echelon Hotels Group" loading="lazy">
+              </a>
             </div>
             <div class="studio-item">
-              <img src="DZA.Png.webp" alt="DZA Logo" loading="lazy">
+              <a href="https://www.roblox.com/communities/34186661/Darkzone-Armory#!/about" target="_blank" rel="noopener noreferrer">
+                <img src="DZA.Png.webp" alt="Darkzone Armory" loading="lazy">
+              </a>
             </div>
             <div class="studio-item">
-              <img src="Novad.png.webp" alt="Novad Logo" loading="lazy">
+              <a href="https://www.roblox.com/communities/15264169/Novad-Architects#!/about" target="_blank" rel="noopener noreferrer">
+                <img src="Novad.png.webp" alt="Novad Architects" loading="lazy">
+              </a>
+            </div>
+            <div class="studio-item">
+              <img src="TOHOU.webp" alt="TOHOU" loading="lazy">
             </div>
           </div>
 
@@ -1004,11 +1080,98 @@
       </div>
     </section>
 
+    <!-- COMMISSION RULES SECTION -->
+    <section class="section" id="rules">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="section-index">02 / COMMISSION TERMS</div>
+            <h2>Rules & Guidelines</h2>
+          </div>
+          <p class="section-intro">
+            By commissioning me, you agree to the following terms[cite: 3]. Please review them carefully before placing an order[cite: 3].
+          </p>
+        </div>
+
+        <div class="rules-list">
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Respect my time & workflow[cite: 3]</h3>
+              <p class="rule-desc">
+                Commissioning me hires my technical expertise, not my full schedule[cite: 3]. I operate as an independent developer with personal projects, ongoing client commitments, and dedicated personal time[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">01</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Avoid unnecessary pressure or rushing[cite: 3]</h3>
+              <p class="rule-desc">
+                Please refrain from repeatedly requesting updates or asking me to rush[cite: 3]. Development progresses efficiently when planned according to an agreed timeline[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">02</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Schedule & availability boundaries[cite: 3]</h3>
+              <p class="rule-desc">
+                I do not handle commission requests or work during designated personal time, breaks, or off-hours[cite: 3]. All inquiries sent during these hours will be answered when I am back at my desk[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">03</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Zero tolerance for disrespect[cite: 3]</h3>
+              <p class="rule-desc">
+                Hostility, condescension, threats, or aggressive behavior will not be tolerated under any circumstances[cite: 3]. Clear, professional communication is required from both sides[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">04</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Professional communication[cite: 3]</h3>
+              <p class="rule-desc">
+                Questions, revisions, and feedback are always welcome and encouraged[cite: 3]. However, demands, micromanagement, or rude behavior will not be accommodated[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">05</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Deadline & milestone management[cite: 3]</h3>
+              <p class="rule-desc">
+                When a milestone or deadline is agreed upon, I manage my timeline strictly to meet it[cite: 3]. Constant reminders are unnecessary; if any unexpected delay arises, I will communicate it proactively[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">06</span>[cite: 3]
+          </div>
+
+          <div class="rule-item">
+            <div class="rule-content">
+              <h3 class="rule-title">Right of refusal and termination[cite: 3]</h3>
+              <p class="rule-desc">
+                I reserve the right to decline any proposal or terminate an active commission if a client exhibits abusive behavior, repeated disrespect, or breaches these guidelines[cite: 3].
+              </p>
+            </div>
+            <span class="rule-number">07</span>[cite: 3]
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="services">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="section-index">02 / WHAT I DO</div>
+            <div class="section-index">03 / WHAT I DO</div>
             <h2>How I can help</h2>
           </div>
           <p class="section-intro">
@@ -1080,7 +1243,7 @@
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="section-index">03 / APPROACH</div>
+            <div class="section-index">04 / APPROACH</div>
             <h2>More than just code</h2>
           </div>
         </div>
@@ -1113,10 +1276,15 @@
 
     <section class="section" id="contact">
       <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="section-index">05 / GET IN TOUCH</div>
+            <h2>Have a project in mind?</h2>
+          </div>
+        </div>
+
         <div class="contact-panel">
           <div>
-            <div class="section-index">04 / GET IN TOUCH</div>
-            <h2>Have a project in mind?</h2>
             <p>
               If you need help building a mechanic, developing a system,
               improving an existing game, or working through balancing
